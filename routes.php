@@ -1,9 +1,19 @@
 <?php
+require_once __DIR__ . '/autoload.php';
+
+use App\Controller\Auth;
+
 $request = $_SERVER['REQUEST_URI'];
+$method = $_SERVER['REQUEST_METHOD'];
 
 switch ($request) {
     case '/register' :
-        require __DIR__ . '/view/auth/register.php';
+       if( $method == 'POST' ) {
+           $auth = new Auth();
+           $auth->register();
+       }else {
+           require __DIR__ . '/view/auth/register.php';
+       }
         break;
     case '/event/' :
     case '/event/index' :
