@@ -16,38 +16,38 @@ class Auth
     public function register()
     {
         // Check if the form is submitted via POST
-        if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
-                'name' => trim( isset($_POST['name'] ) ? $_POST['name'] : ''),
-                'email' => trim( isset($_POST['email'] ) ? $_POST['email'] : ''),
-                'password' => trim( isset($_POST['password'] ) ? $_POST['password'] : ''),
-                'confirm_pass' => trim( isset($_POST['confirm_pass'] ) ? $_POST['confirm_pass'] : ''),
+                'name' => trim(isset($_POST['name']) ? $_POST['name'] : ''),
+                'email' => trim(isset($_POST['email']) ? $_POST['email'] : ''),
+                'password' => trim(isset($_POST['password']) ? $_POST['password'] : ''),
+                'confirm_pass' => trim(isset($_POST['confirm_pass']) ? $_POST['confirm_pass'] : ''),
             ];
 
             $errors = [];
-            if ( empty( $data['name'] ) ) {
+            if (empty($data['name'])) {
                 $errors[] = "Username is required.";
             }
 
-            if ( empty( $data['email'] ) ) {
+            if (empty($data['email'])) {
                 $errors[] = "Email is required.";
-            } elseif ( ! filter_var( $data['email'], FILTER_VALIDATE_EMAIL ) ) {
+            } elseif (! filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                 $errors[] = "Invalid email format.";
             }
 
-            if ( empty( $data['password'] ) ) {
+            if (empty($data['password'])) {
                 $errors[] = "Password is required.";
             }
 
-            if ( $data['password'] !== $data['confirm_pass'] ) {
+            if ($data['password'] !== $data['confirm_pass']) {
                 $errors[] = "Confirm Password not matched.";
             }
 
             // If there are no errors, create the user
-            if ( empty( $errors ) ) {
-                $data['password'] = password_hash( $data['password'], PASSWORD_BCRYPT);
+            if (empty($errors)) {
+                $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
-                $result = $this->userDB->create( $data );
+                $result = $this->userDB->create($data);
                 if ($result) {
                     header('Location: /login');
                     exit;
