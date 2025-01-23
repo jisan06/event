@@ -35,9 +35,9 @@ class User
 
     public function getUserByEmail($email)
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        $user = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+        $user->bind_param("s", $email);
+        $user->execute();
+        return $user->get_result()->fetch_assoc();
     }
 }
