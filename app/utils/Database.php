@@ -39,9 +39,25 @@ class Database
         return $this->connection;
     }
 
+    // This will allow us to prepare a statement in the model
+    public function prepare($query)
+    {
+        return $this->connection->prepare($query);
+    }
+
+    // Method to run simple queries (e.g., SELECT, INSERT, UPDATE, DELETE)
+    public function query($query)
+    {
+        return $this->connection->query($query);
+    }
+
     // Prevent cloning of the instance
-    private function __clone() {}
+    private function __clone()
+    {
+    }
 
     // Prevent unserialization of the instance
-    public function __wakeup() {}
+    public function __wakeup()
+    {
+    }
 }

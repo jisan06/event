@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Model\User;
+use App\Model\UserModel;
 
 class Auth
 {
@@ -10,7 +10,7 @@ class Auth
 
     public function __construct()
     {
-        $this->userDB = new User();
+        $this->userDB = new UserModel();
     }
 
     public function register()
@@ -80,12 +80,12 @@ class Auth
 
             // If no errors, check credentials
             if (empty($errors)) {
-                $user = $this->userDB->getUserByEmail($email);
+                $user = $this->userDB->findByEmail($email);
                 if ($user && password_verify($password, $user['password'])) {
                     // Set user session
                     session_start();
                     $_SESSION['user'] = $user;
-                    header('Location: /event/');
+                    header('Location: /event');
                     exit;
                 } else {
                     $errors['general'] = 'Invalid email or password.';
@@ -93,7 +93,18 @@ class Auth
             }
 
             // If errors exist, load the login view with errors
-            require __DIR__ . '/../../view/auth/login.php';
+            require __DIR__ . '/login';
         }
+    }
+
+    public function logout()
+    {
+        session_start();
+        session_unset();
+        session_destroy();
+
+        // Redirect to the login page
+        header('Location: /login');
+        exit;
     }
 }

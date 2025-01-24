@@ -1,68 +1,71 @@
 <?php include __DIR__ . '/../include/header.php'; ?>
 
 <div class="container mt-5">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-12 col-xl-11">
-            <div class="card text-black" style="border-radius: 25px;">
-                <div class="card-body p-md-5">
-                    <div class="row justify-content-center">
-                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-
-                            <form method="post" action="/login">
-
-                                <div class="mb-4">
-                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            id="email"
-                                            class="form-control"
-                                            required
-                                        />
-                                        <label class="form-label" for="email">Your Email</label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            id="password"
-                                            class="form-control"
-                                            minlength="6"
-                                            required
-                                        />
-                                        <label class="form-label" for="password">Password</label>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <button
-                                        class="btn btn-primary btn-lg"
-                                        type="submit"
-                                        data-mdb-button-init
-                                        data-mdb-ripple-init
-                                    >
-                                        Login
-                                    </button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                        <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-
-                            <img
-                                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                                class="img-fluid"
-                                alt="Sample image"
-                            >
-
-                        </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Event List</h2>
+                <a href="/events/create" class="btn btn-primary">
+                    Create Event
+                </a>
+            </div>
+            <div class="table-responsive shadow p-4 rounded bg-light">
+                <?php if (!empty($_SESSION['success'])) : ?>
+                    <div class="alert alert-success p-2">
+                        <?php echo htmlspecialchars($_SESSION['success']); ?>
                     </div>
-                </div>
+                    <?php unset($_SESSION['success']); ?>
+                <?php endif; ?>
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if (!empty($events)) : ?>
+                        <?php foreach ($events as $key => $event) : ?>
+                            <tr>
+                                <th scope="row"><?php echo $key + 1; ?></th>
+                                <td><?php echo htmlspecialchars($event['name'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($event['location'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($event['date'] ?? ''); ?></td>
+                                <td class="text-center">
+                                    <a href="/events/<?php echo $event['id']; ?>"
+                                       class="btn btn-warning btn-sm px-2 py-2"
+                                    >
+                                        Edit
+                                    </a>
+                                    <form
+                                        action="/events/<?php echo $event['id']; ?>"
+                                        method="POST"
+                                        style="display:inline;"
+                                    >
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger px-2 py-2"
+                                            onclick="return confirm('Are you sure you want to delete this event?');"
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="6" class="text-center">No events found.</td>
+                        </tr>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+

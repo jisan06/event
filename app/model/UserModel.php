@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Utils\Database;
 
-class User
+class UserModel
 {
     private $db;
 
@@ -13,7 +13,7 @@ class User
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function create( array $data )
+    public function create(array $data): bool
     {
         // Prepare the data from the array
         $name = $data['name'];
@@ -33,7 +33,7 @@ class User
         return $user->execute();
     }
 
-    public function getUserByEmail($email)
+    public function findByEmail($email)
     {
         $user = $this->db->prepare("SELECT * FROM users WHERE email = ?");
         $user->bind_param("s", $email);

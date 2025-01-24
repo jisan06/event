@@ -28,7 +28,7 @@
                     </li>
                 <?php }else { ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="/event">Event</a>
+                        <a class="nav-link" href="/events">Event</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
