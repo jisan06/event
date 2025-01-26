@@ -19,9 +19,26 @@ class Event
 
     public function index()
     {
-        $events = $this->eventDB->all();
+        $limit = 10;
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $order = $_GET['order'] ?? 'ASC';
+        $order_by = $_GET['order_by'] ?? 'name';
+        $offset = ($page - 1) * $limit;
+
+        $filters = [
+            'name' => $_GET['name'] ?? '',
+            'location' => $_GET['location'] ?? '',
+            'start_date' => $_GET['start_date'] ?? '',
+            'end_date' => $_GET['end_date'] ?? ''
+        ];
+
+        $events = $this->eventDB->all($limit, $order, $order_by, $offset, $filters);
+        $total = $this->eventDB->count($filters); // You need to update the count method to support filters
+        $total_pages = ceil($total / $limit);
+
         include Helper::view('event/index.php');
     }
+
 
     public function create()
     {
@@ -31,27 +48,45 @@ class Event
     {
         session_start();
         $errors = [];
-        if (empty($_POST['name'])) {
-            $errors[] = 'Event name is required.';
-        } else {
-            if ($this->eventDB->uniqueName($_POST['name'])) {
-                $errors[] = 'Event name is already exist.';
+
+        try {
+            // Validation
+            if (empty($_POST['name'])) {
+                $errors[] = 'Event name is required.';
+            } else {
+                if ($this->eventDB->uniqueName($_POST['name'])) {
+                    $errors[] = 'Event name already exists.';
+                }
             }
-        }
-        if (empty($_POST['location'])) {
-            $errors[] = 'Location is required.';
-        }
-        if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
+            if (empty($_POST['location'])) {
+                $errors[] = 'Location is required.';
+            }
+
+            // If there are validation errors
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                header("Location: /events/create");
+                exit;
+            }
+
+            // Create event
+            $this->eventDB->create($_POST);
+
+            // Success message
+            $_SESSION['success'] = 'Event created successfully.';
+            header("Location: /events");
+            exit;
+        } catch (\Exception $e) {
+            // Log the exception (you can implement a Logger here)
+            error_log($e->getMessage());
+
+            // Redirect with an error message
+            $_SESSION['errors'] = ['An unexpected error occurred. Please try again later.'];
             header("Location: /events/create");
             exit;
         }
-
-        $this->eventDB->create($_POST);
-        $_SESSION['success'] = 'Event created successfully.';
-        header("Location: /events");
-        exit;
     }
+
 
     public function edit()
     {
@@ -72,32 +107,45 @@ class Event
 
         $errors = [];
 
-        if (empty($_POST['name'])) {
-            $errors[] = 'Event name is required.';
-        } else {
-            // Check if the event name is unique (exclude the current event)
-            if ($this->eventDB->uniqueName($_POST['name'], $id)) {
-                $errors[] = 'Event name already exists.';
+        try {
+            // Validation
+            if (empty($_POST['name'])) {
+                $errors[] = 'Event name is required.';
+            } else {
+                // Check if the event name is unique (exclude the current event)
+                if ($this->eventDB->uniqueName($_POST['name'], $id)) {
+                    $errors[] = 'Event name already exists.';
+                }
             }
-        }
-        if (empty($_POST['location'])) {
-            $errors[] = 'Location is required.';
-        }
+            if (empty($_POST['location'])) {
+                $errors[] = 'Location is required.';
+            }
 
-        if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
+            // If there are validation errors
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                header("Location: /events/$id");
+                exit;
+            }
+
+            // Attempt to update the event
+            if ($this->eventDB->update($id, $_POST)) {
+                $_SESSION['success'] = 'Event updated successfully.';
+            } else {
+                $_SESSION['errors'] = ['Failed to update the event. Please try again.'];
+            }
+
+            header("Location: /events");
+            exit;
+        } catch (\Exception $e) {
+            // Log the exception
+            error_log($e->getMessage());
+
+            // Redirect with an error message
+            $_SESSION['errors'] = ['An unexpected error occurred. Please try again later.'];
             header("Location: /events/$id");
             exit;
         }
-
-        if ($this->eventDB->update($id, $_POST)) {
-            $_SESSION['success'] = 'Event updated successfully.';
-        } else {
-            $_SESSION['errors'] = ['Failed to update the event. Please try again.'];
-        }
-
-        header("Location: /events");
-        exit;
     }
 
     public function delete($id)

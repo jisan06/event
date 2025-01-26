@@ -85,7 +85,7 @@ class Auth
                     // Set user session
                     session_start();
                     $_SESSION['user'] = $user;
-                    header('Location: /event');
+                    header('Location: /events');
                     exit;
                 } else {
                     $errors['general'] = 'Invalid email or password.';

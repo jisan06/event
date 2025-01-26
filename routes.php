@@ -70,7 +70,7 @@ if ($routeSegments[0] === 'events') {
             if ($method === 'POST') {
                 $auth->login();
             } else {
-                require __DIR__ . '/view/auth/login.php';
+                require \App\Helper::view('auth/login.php');
             }
             break;
 

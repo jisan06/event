@@ -16,13 +16,32 @@
                     </div>
                     <?php unset($_SESSION['success']); ?>
                 <?php endif; ?>
+                <?php include __DIR__ . '/../include/filter.php' ?>
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Date</th>
+                        <th>
+                            Name
+                            <a href="?order_by=name&order=ASC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
+                               class="btn btn-link btn-sm p-0 text-decoration-none">▲</a>
+                            <a href="?order_by=name&order=DESC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
+                               class="btn btn-link btn-sm p-0 text-decoration-none">▼</a>
+                        </th>
+                        <th>
+                            Location
+                            <a href="?order_by=location&order=ASC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
+                               class="btn btn-link btn-sm p-0 text-decoration-none">▲</a>
+                            <a href="?order_by=location&order=DESC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
+                               class="btn btn-link btn-sm p-0 text-decoration-none">▼</a>
+                        </th>
+                        <th>
+                            Date
+                            <a href="?order_by=date&order=ASC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
+                               class="btn btn-link btn-sm p-0 text-decoration-none">▲</a>
+                            <a href="?order_by=date&order=DESC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
+                               class="btn btn-link btn-sm p-0 text-decoration-none">▼</a>
+                        </th>
                         <th class="text-center">Actions</th>
                     </tr>
                     </thead>
@@ -33,7 +52,9 @@
                                 <th scope="row"><?php echo $key + 1; ?></th>
                                 <td><?php echo htmlspecialchars($event['name'] ?? ''); ?></td>
                                 <td><?php echo htmlspecialchars($event['location'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($event['date'] ?? ''); ?></td>
+                                <td>
+                                    <?php echo !empty($event['date']) ? date('d-m-Y h:i a', strtotime($event['date'])) : 'N/A'; ?>
+                                </td>
                                 <td class="text-center">
                                     <a href="/events/<?php echo $event['id']; ?>"
                                        class="btn btn-warning btn-sm px-2 py-2"
@@ -64,6 +85,29 @@
                     <?php endif; ?>
                     </tbody>
                 </table>
+                <?php if ($total_pages > 1): ?>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <!-- Previous Button -->
+                            <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                                <a class="page-link" href="?order_by=<?= $order_by; ?>&order=<?= $order; ?>&page=<?= max(1, $page - 1); ?>">Previous</a>
+                            </li>
+
+                            <!-- Page Numbers -->
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?order_by=<?= $order_by; ?>&order=<?= $order; ?>&page=<?= $i; ?>"><?= $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <!-- Next Button -->
+                            <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                                <a class="page-link"
+                                   href="?order_by=<?= $order_by; ?>&order=<?= $order; ?>&page=<?= min($total_pages, $page + 1); ?>">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                <?php endif; ?>
             </div>
         </div>
     </div>
