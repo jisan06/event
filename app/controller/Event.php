@@ -120,6 +120,9 @@ class Event
             if (empty($_POST['location'])) {
                 $errors[] = 'Location is required.';
             }
+            if (empty($_POST['total_seat'])) {
+                $errors[] = 'Please write total available seat';
+            }
 
             // If there are validation errors
             if (!empty($errors)) {
@@ -160,5 +163,60 @@ class Event
 
         header("Location: /events");
         exit;
+    }
+
+    public function register($event_id)
+    {
+        $event = $this->eventDB->find($event_id);
+        include Helper::view('event/register.php');
+    }
+
+    public function register_event($event_id)
+    {
+        session_start();
+        $errors = [];
+
+        try {
+            // Validation
+            if (empty($_POST['name'])) {
+                $errors[] = 'User name is required.';
+            } else {
+                if ($this->eventDB->unique_registration($event_id, $_POST['email'])) {
+                    $errors[] = 'This user already registered.';
+                }
+            }
+            if (empty($_POST['email'])) {
+                $errors[] = 'User email is required.';
+            }
+
+            $event = $this->eventDB->find($event_id);
+            $count_registration = $this->eventDB->count_registration($event_id);
+            if ($count_registration >= $event['total_seat']) {
+                $errors[] = 'This event has reached its maximum capacity.';
+            }
+
+            // If there are validation errors
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                header("Location: /events/register/" . $event_id);
+                exit;
+            }
+
+            // Create event
+            $this->eventDB->event_register($event_id, $_POST);
+
+            // Success message
+            $_SESSION['success'] = 'New Event Registration successfully.';
+            header("Location: /events");
+            exit;
+        } catch (\Exception $e) {
+            // Log the exception (you can implement a Logger here)
+            error_log($e->getMessage());
+
+            // Redirect with an error message
+            $_SESSION['errors'] = ['An unexpected error occurred. Please try again later.'];
+            header("Location: /events/register/" . $event_id);
+            exit;
+        }
     }
 }

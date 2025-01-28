@@ -26,9 +26,17 @@ class EventModel
     public function update($id, $data): bool
     {
         $data['date'] = empty($data['date']) ? null : $data['date'];
-        $query = "UPDATE events SET name = ?, date = ?, location = ?, description = ? WHERE id = ?";
+        $query = "UPDATE events SET name = ?, date = ?, location = ?, description = ?, total_seat = ? WHERE id = ?";
         $db = $this->db->prepare($query);
-        $db->bind_param('ssssi', $data['name'], $data['date'], $data['location'], $data['description'], $id);
+        $db->bind_param(
+            'ssssii',
+            $data['name'],
+            $data['date'],
+            $data['location'],
+            $data['description'],
+            $data['total_seat'],
+            $id
+        );
         return $db->execute();
     }
 
@@ -48,7 +56,14 @@ class EventModel
         }
 
         // Build the base query
-        $query = "SELECT * FROM events WHERE 1";
+        $query = "
+        SELECT events.*, 
+               COUNT(event_attends.id) AS registered 
+                FROM events 
+                LEFT JOIN event_attends 
+                ON events.id = event_attends.event_id 
+                WHERE 1
+        ";
 
         // Add filters to the query
         if (!empty($filters['name'])) {
@@ -66,7 +81,7 @@ class EventModel
         }
 
         // Add sorting and pagination
-        $query .= " ORDER BY $order_by $order LIMIT ? OFFSET ?";
+        $query .= " GROUP BY events.id ORDER BY $order_by $order LIMIT ? OFFSET ?";
 
         // Prepare the statement
         $db = $this->db->prepare($query);
@@ -145,5 +160,39 @@ class EventModel
 
         // Return true if the name already exists (excluding the current event)
         return $result->num_rows > 0;
+    }
+
+    // Check if already register the event
+    public function unique_registration($event_id, $email): bool
+    {
+        $query = "SELECT id FROM event_attends WHERE event_id = ? AND email = ?";
+
+        $db = $this->db->prepare($query);
+        $db->bind_param('is', $event_id, $email);
+
+        $db->execute();
+        $result = $db->get_result();
+
+        // Return true if the event and email already exists
+        return $result->num_rows > 0;
+    }
+
+    public function count_registration($event_id): int
+    {
+        $query = "SELECT COUNT(*) AS count FROM event_attends WHERE event_id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $event_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        return (int)$result['count'];
+    }
+
+    public function event_register($event_id, $data): bool
+    {
+        $query = "INSERT INTO event_attends (event_id, name, email) VALUES (?, ?, ?)";
+        $db = $this->db->prepare($query);
+        $db->bind_param('iss', $event_id, $data['name'], $data['email']);
+
+        return $db->execute();
     }
 }

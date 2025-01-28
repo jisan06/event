@@ -48,6 +48,18 @@ if ($routeSegments[0] === 'events') {
             $event->delete($routeSegments[1]);
             break;
 
+        case isset($routeSegments[2]) &&
+            is_numeric($routeSegments[2]) &&
+            $request === 'events/register/' . $routeSegments[2]:
+
+            // View event register page
+            if($method === 'GET') {
+                $event->register($routeSegments[2]);
+            }elseif($method === 'POST') {
+                $event->register_event($routeSegments[2]);
+            }
+            break;
+
         default:
             http_response_code(404);
             echo "Event route not found.";

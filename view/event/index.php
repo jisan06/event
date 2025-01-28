@@ -42,6 +42,7 @@
                             <a href="?order_by=date&order=DESC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
                                class="btn btn-link btn-sm p-0 text-decoration-none">▼</a>
                         </th>
+                        <th>Registered</th>
                         <th class="text-center">Actions</th>
                     </tr>
                     </thead>
@@ -55,7 +56,19 @@
                                 <td>
                                     <?php echo !empty($event['date']) ? date('d-m-Y h:i a', strtotime($event['date'])) : 'N/A'; ?>
                                 </td>
+                                <td>
+                                    <?php
+                                        echo $event['registered'];
+                                    ?>
+                                </td>
                                 <td class="text-center">
+                                    <?php if($event['total_seat'] > $event['registered']) { ?>
+                                    <a href="/events/register/<?php echo $event['id']; ?>"
+                                       class="btn btn-outline-danger btn-sm px-2 py-2"
+                                    >
+                                        Registration
+                                    </a>
+                                    <?php } ?>
                                     <a href="/events/<?php echo $event['id']; ?>"
                                        class="btn btn-warning btn-sm px-2 py-2"
                                     >
