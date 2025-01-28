@@ -42,7 +42,7 @@
                             <a href="?order_by=date&order=DESC<?= isset($_GET['page']) ? '&page=' . $_GET['page'] : ''; ?>"
                                class="btn btn-link btn-sm p-0 text-decoration-none">▼</a>
                         </th>
-                        <th>Registered</th>
+                        <th class="text-center">Registered</th>
                         <th class="text-center">Actions</th>
                     </tr>
                     </thead>
@@ -56,10 +56,13 @@
                                 <td>
                                     <?php echo !empty($event['date']) ? date('d-m-Y h:i a', strtotime($event['date'])) : 'N/A'; ?>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <?php
                                         echo $event['registered'];
+                                        if($event['registered'] > 0) {
                                     ?>
+                                        <a href="/events/csv/<?php echo $event['id']; ?>" class="btn btn-link">CSV</a>
+                                    <?php } ?>
                                 </td>
                                 <td class="text-center">
                                     <?php if($event['total_seat'] > $event['registered']) { ?>

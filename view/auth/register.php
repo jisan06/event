@@ -8,11 +8,21 @@
                     <div class="row justify-content-center">
                         <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                             <h3>Create Your Account</h3>
-
+                            <?php if (!empty($_SESSION['errors'])) : ?>
+                                <div class="alert alert-danger p-2 pb-0">
+                                    <ul>
+                                        <?php foreach ($_SESSION['errors'] as $error) : ?>
+                                            <li><?php echo htmlspecialchars($error); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                                <?php unset($_SESSION['errors']); ?>
+                            <?php endif; ?>
                             <form method="post" action="/register">
 
                                 <div class="mb-4">
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="name">Your Name</label>
                                         <input
                                             type="text"
                                             name="name"
@@ -20,12 +30,12 @@
                                             class="form-control"
                                             required
                                         />
-                                        <label class="form-label" for="name">Your Name</label>
                                     </div>
                                 </div>
 
                                 <div class="mb-4">
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="email">Your Email</label>
                                         <input
                                             type="email"
                                             name="email"
@@ -33,12 +43,12 @@
                                             class="form-control"
                                             required
                                     />
-                                        <label class="form-label" for="email">Your Email</label>
                                     </div>
                                 </div>
 
                                 <div class="mb-4">
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="password">Password</label>
                                         <input
                                             type="password"
                                             name="password"
@@ -47,12 +57,12 @@
                                             minlength="6"
                                             required
                                         />
-                                        <label class="form-label" for="password">Password</label>
                                     </div>
                                 </div>
 
                                 <div class="mb-4">
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                        <label class="form-label" for="confirm_pass">Repeat your password</label>
                                         <input
                                             type="password"
                                             name="confirm_pass"
@@ -61,7 +71,6 @@
                                             minlength="6"
                                             required
                                         />
-                                        <label class="form-label" for="confirm_pass">Repeat your password</label>
                                     </div>
                                 </div>
 
@@ -76,7 +85,7 @@
                         <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 
                             <img
-                                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                                src="https://www.mccormick.northwestern.edu/mechanical/images/graduate/me512-header-photo.jpg"
                                 class="img-fluid"
                                 alt="Sample image"
                             >

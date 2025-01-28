@@ -219,4 +219,23 @@ class Event
             exit;
         }
     }
+
+    public function download($event_id)
+    {
+        $event = $this->eventDB->find($event_id);
+        $attendees = $this->eventDB->attendees_by_event($event_id);
+
+        $file_name = "{$event['name']}.csv";
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $file_name . '"');
+
+        $result = fopen('php://output', 'w');
+        fputcsv($result, ['Name', 'Email', 'Registration Date']);
+        foreach ($attendees as $attendee) {
+            fputcsv($result, [$attendee['name'], $attendee['email'], $attendee['created_at']]);
+        }
+
+        fclose($result);
+        exit;
+    }
 }

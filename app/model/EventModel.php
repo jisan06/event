@@ -195,4 +195,13 @@ class EventModel
 
         return $db->execute();
     }
+
+    public function attendees_by_event($event_id)
+    {
+        $query = "SELECT name, email, created_at FROM event_attends WHERE event_id = ?";
+        $att = $this->db->prepare($query);
+        $att->bind_param('i', $event_id);
+        $att->execute();
+        return $att->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 }

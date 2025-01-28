@@ -60,6 +60,15 @@ if ($routeSegments[0] === 'events') {
             }
             break;
 
+        case isset($routeSegments[2]) &&
+            is_numeric($routeSegments[2]) &&
+            $request === 'events/csv/' . $routeSegments[2] &&
+            $method === 'GET' :
+
+            // Download csv file
+            $event->download($routeSegments[2]);
+            break;
+
         default:
             http_response_code(404);
             echo "Event route not found.";

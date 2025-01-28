@@ -15,6 +15,7 @@ class Auth
 
     public function register()
     {
+        session_start();
         // Check if the form is submitted via POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
@@ -43,26 +44,37 @@ class Auth
                 $errors[] = "Confirm Password not matched.";
             }
 
+            $user = $this->userDB->findByEmail($_POST['email']);
+            if($user) {
+                $errors[] = 'This email already registered';
+            }
+
             // If there are no errors, create the user
             if (empty($errors)) {
                 $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
                 $result = $this->userDB->create($data);
                 if ($result) {
+                    $_SESSION['success'] = 'Your registration complete, you can login now';
                     header('Location: /login');
                     exit;
                 } else {
-                    $errors['general'] = 'Registration failed. Please try again.';
+                    $errors[] = 'Registration failed. Please try again.';
                 }
             }
 
-            // If errors exist, load the register view with errors
-            require __DIR__ . '/../../view/auth/register.php';
+            // If there are validation errors
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                header("Location: /register");
+                exit;
+            }
         }
     }
 
     public function login()
     {
+        session_start();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors = [];
 
@@ -72,28 +84,30 @@ class Auth
 
             // Validate inputs
             if (empty($email)) {
-                $errors['email'] = 'Email is required.';
+                $errors[] = 'Email is required.';
             }
             if (empty($password)) {
-                $errors['password'] = 'Password is required.';
+                $errors[] = 'Password is required.';
             }
 
             // If no errors, check credentials
             if (empty($errors)) {
                 $user = $this->userDB->findByEmail($email);
                 if ($user && password_verify($password, $user['password'])) {
-                    // Set user session
-                    session_start();
                     $_SESSION['user'] = $user;
                     header('Location: /events');
                     exit;
                 } else {
-                    $errors['general'] = 'Invalid email or password.';
+                    $errors[] = 'Invalid email or password.';
                 }
             }
 
-            // If errors exist, load the login view with errors
-            require __DIR__ . '/login';
+            // If there are validation errors
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                header("Location: /login");
+                exit;
+            }
         }
     }
 
