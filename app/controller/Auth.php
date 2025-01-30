@@ -56,7 +56,7 @@ class Auth
                 $result = $this->userDB->create($data);
                 if ($result) {
                     $_SESSION['success'] = 'Your registration complete, you can login now';
-                    header('Location: /login');
+                    header("Location: " . BASE_URL . "login");
                     exit;
                 } else {
                     $errors[] = 'Registration failed. Please try again.';
@@ -66,7 +66,7 @@ class Auth
             // If there are validation errors
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
-                header("Location: /register");
+                header("Location: " . BASE_URL . "register");
                 exit;
             }
         }
@@ -95,7 +95,7 @@ class Auth
                 $user = $this->userDB->findByEmail($email);
                 if ($user && password_verify($password, $user['password'])) {
                     $_SESSION['user'] = $user;
-                    header('Location: /events');
+                    header("Location: " . BASE_URL . "events");
                     exit;
                 } else {
                     $errors[] = 'Invalid email or password.';
@@ -105,7 +105,7 @@ class Auth
             // If there are validation errors
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
-                header("Location: /login");
+                header("Location: " . BASE_URL . "login");
                 exit;
             }
         }
@@ -118,7 +118,7 @@ class Auth
         session_destroy();
 
         // Redirect to the login page
-        header('Location: /login');
+        header("Location: " . BASE_URL . "login");
         exit;
     }
 }

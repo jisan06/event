@@ -8,7 +8,7 @@ spl_autoload_register(function ($class) {
     $baseDir = __DIR__ . '/app/';
 
     // Check if the class is part of the "App" namespace
-    if (strpos($class, 'App\\') === 0) {
+    if (strpos($class, 'App' . DIRECTORY_SEPARATOR) === 0) {
         $file = $baseDir . substr($class, 4) . '.php';  // Remove 'App\' from the namespace
 
         // Check if the file exists and require it

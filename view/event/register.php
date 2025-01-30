@@ -19,7 +19,7 @@
             <?php endif; ?>
 
             <form
-                action="/events/register/<?php echo htmlspecialchars($event['id']); ?>"
+                action="<?= BASE_URL ?>events/register/<?php echo htmlspecialchars($event['id']); ?>"
                 method="POST"
                 class="shadow p-4 rounded bg-light"
             >
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end gap-1">
-                    <a href="/events" class="btn btn-secondary">Cancel</a>
+                    <a href="<?= BASE_URL ?>events" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary me-2">Register</button>
                 </div>
 

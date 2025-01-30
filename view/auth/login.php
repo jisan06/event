@@ -23,7 +23,7 @@
                                 </div>
                                 <?php unset($_SESSION['success']); ?>
                             <?php endif; ?>
-                            <form method="post" action="/login">
+                            <form method="post" action="<?= BASE_URL ?>login">
 
                                 <div class="mb-4">
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">

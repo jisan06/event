@@ -39,7 +39,7 @@ class Database
         return $this->connection;
     }
 
-    // This will allow us to prepare a statement in the model
+    // This will allow us to prepare a statement in the Model
     public function prepare($query)
     {
         return $this->connection->prepare($query);

@@ -67,17 +67,17 @@ class EventModel
 
         // Add filters to the query
         if (!empty($filters['name'])) {
-            $query .= " AND name LIKE ?";
+            $query .= " AND events.name LIKE ?";
         }
         if (!empty($filters['location'])) {
-            $query .= " AND location LIKE ?";
+            $query .= " AND events.location LIKE ?";
         }
         if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
-            $query .= " AND date BETWEEN ? AND ?";
+            $query .= " AND events.date BETWEEN ? AND ?";
         } elseif (!empty($filters['start_date'])) {
-            $query .= " AND date >= ?";
+            $query .= " AND events.date >= ?";
         } elseif (!empty($filters['end_date'])) {
-            $query .= " AND date <= ?";
+            $query .= " AND events.date <= ?";
         }
 
         // Add sorting and pagination

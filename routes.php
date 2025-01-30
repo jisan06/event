@@ -4,11 +4,31 @@ require_once __DIR__ . '/autoload.php';
 use App\Controller\Auth;
 use App\Controller\Event;
 
-$request = $_SERVER['REQUEST_URI'];
-$method = $_SERVER['REQUEST_METHOD'];
-$request = trim(parse_url($request, PHP_URL_PATH), '/');
-$routeSegments = explode('/', $request); // Split the URI into segments
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+$base_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
+define('BASE_URL', str_replace('\/', '/', $base_url));
 
+$method = $_SERVER['REQUEST_METHOD'];
+// Extract only the path from the full request URI
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$requestUri = trim($requestUri, '/'); // Remove the trailing slash if exists
+
+// Get base directory from the script name
+$baseDir = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'))[0];
+
+// If the request URI starts with the base directory, remove it
+if (strpos($requestUri, $baseDir) === 0) {
+    $requestUri = substr($requestUri, strlen($baseDir) + 1);
+}
+
+$routeSegments = explode('/', $requestUri); // Split the path into segments
+$request = implode('/', $routeSegments); // Rebuild the request URI
+
+// Debug: Output the route segments and request URI
+// print_r($routeSegments);
+// echo $request;
+
+// Route Handling
 if ($routeSegments[0] === 'events') {
     $event = new Event();
 
@@ -35,15 +55,15 @@ if ($routeSegments[0] === 'events') {
             break;
 
         case isset($routeSegments[1]) &&
-        is_numeric($routeSegments[1]) &&
-        (isset($_POST['_method']) && $_POST['_method'] === 'PUT'):
+            is_numeric($routeSegments[1]) &&
+            (isset($_POST['_method']) && $_POST['_method'] === 'PUT'):
             // Update a specific event
             $event->update($routeSegments[1]);
             break;
 
         case isset($routeSegments[1]) &&
-        is_numeric($routeSegments[1]) &&
-        (isset($_POST['_method']) && $_POST['_method'] === 'DELETE'):
+            is_numeric($routeSegments[1]) &&
+            (isset($_POST['_method']) && $_POST['_method'] === 'DELETE'):
             // Delete a specific event
             $event->delete($routeSegments[1]);
             break;
@@ -55,7 +75,7 @@ if ($routeSegments[0] === 'events') {
             // View event register page
             if($method === 'GET') {
                 $event->register($routeSegments[2]);
-            }elseif($method === 'POST') {
+            } elseif($method === 'POST') {
                 $event->register_event($routeSegments[2]);
             }
             break;

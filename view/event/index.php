@@ -5,7 +5,7 @@
         <div class="col-lg-10">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Event List</h2>
-                <a href="/events/create" class="btn btn-primary">
+                <a href="<?= BASE_URL ?>events/create" class="btn btn-primary">
                     Create Event
                 </a>
             </div>
@@ -61,24 +61,24 @@
                                         echo $event['registered'];
                                         if($event['registered'] > 0) {
                                     ?>
-                                        <a href="/events/csv/<?php echo $event['id']; ?>" class="btn btn-link">CSV</a>
+                                        <a href="<?= BASE_URL ?>events/csv/<?php echo $event['id']; ?>" class="btn btn-link">CSV</a>
                                     <?php } ?>
                                 </td>
                                 <td class="text-center">
                                     <?php if($event['total_seat'] > $event['registered']) { ?>
-                                    <a href="/events/register/<?php echo $event['id']; ?>"
+                                    <a href="<?= BASE_URL ?>events/register/<?php echo $event['id']; ?>"
                                        class="btn btn-outline-danger btn-sm px-2 py-2"
                                     >
                                         Registration
                                     </a>
                                     <?php } ?>
-                                    <a href="/events/<?php echo $event['id']; ?>"
+                                    <a href="<?= BASE_URL ?>events/<?php echo $event['id']; ?>"
                                        class="btn btn-warning btn-sm px-2 py-2"
                                     >
                                         Edit
                                     </a>
                                     <form
-                                        action="/events/<?php echo $event['id']; ?>"
+                                        action="<?= BASE_URL ?>events/<?php echo $event['id']; ?>"
                                         method="POST"
                                         style="display:inline;"
                                     >

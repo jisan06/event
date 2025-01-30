@@ -1,4 +1,4 @@
-<form method="GET" action="/events" class="mb-4">
+<form method="GET" action="<?= BASE_URL ?>events" class="mb-4">
     <div class="row">
         <!-- Name Filter -->
         <div class="col-md-3">
@@ -31,7 +31,7 @@
 
     <!-- Submit Button -->
     <div class="mt-3 text-end">
-        <a href="/events" class="btn btn-secondary">Reset</a>
+        <a href="<?= BASE_URL ?>events" class="btn btn-secondary">Reset</a>
         <button type="submit" class="btn btn-primary">Filter</button>
     </div>
 </form>

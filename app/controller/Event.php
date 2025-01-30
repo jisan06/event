@@ -65,7 +65,7 @@ class Event
             // If there are validation errors
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
-                header("Location: /events/create");
+                header("Location: " . BASE_URL . "events/create");
                 exit;
             }
 
@@ -74,7 +74,7 @@ class Event
 
             // Success message
             $_SESSION['success'] = 'Event created successfully.';
-            header("Location: /events");
+            header("Location: " . BASE_URL . "events");
             exit;
         } catch (\Exception $e) {
             // Log the exception (you can implement a Logger here)
@@ -82,7 +82,7 @@ class Event
 
             // Redirect with an error message
             $_SESSION['errors'] = ['An unexpected error occurred. Please try again later.'];
-            header("Location: /events/create");
+            header("Location: " . BASE_URL . "events/create");
             exit;
         }
     }
@@ -127,7 +127,7 @@ class Event
             // If there are validation errors
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
-                header("Location: /events/$id");
+                header("Location: " . BASE_URL . "events/$id");
                 exit;
             }
 
@@ -138,7 +138,7 @@ class Event
                 $_SESSION['errors'] = ['Failed to update the event. Please try again.'];
             }
 
-            header("Location: /events");
+            header("Location: " . BASE_URL . "events");
             exit;
         } catch (\Exception $e) {
             // Log the exception
@@ -146,7 +146,7 @@ class Event
 
             // Redirect with an error message
             $_SESSION['errors'] = ['An unexpected error occurred. Please try again later.'];
-            header("Location: /events/$id");
+            header("Location: " . BASE_URL . "events/$id");
             exit;
         }
     }
@@ -161,7 +161,7 @@ class Event
             $_SESSION['error'] = 'Error deleting event. Please try again.';
         }
 
-        header("Location: /events");
+        header("Location: " . BASE_URL . "events");
         exit;
     }
 
@@ -198,7 +198,7 @@ class Event
             // If there are validation errors
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
-                header("Location: /events/register/" . $event_id);
+                header("Location: " . BASE_URL . "events/register/" . $event_id);
                 exit;
             }
 
@@ -207,7 +207,7 @@ class Event
 
             // Success message
             $_SESSION['success'] = 'New Event Registration successfully.';
-            header("Location: /events");
+            header("Location: " . BASE_URL . "events");
             exit;
         } catch (\Exception $e) {
             // Log the exception (you can implement a Logger here)
@@ -215,7 +215,7 @@ class Event
 
             // Redirect with an error message
             $_SESSION['errors'] = ['An unexpected error occurred. Please try again later.'];
-            header("Location: /events/register/" . $event_id);
+            header("Location: " . BASE_URL . "events/register/" . $event_id);
             exit;
         }
     }

@@ -18,7 +18,7 @@
                                 </div>
                                 <?php unset($_SESSION['errors']); ?>
                             <?php endif; ?>
-                            <form method="post" action="/register">
+                            <form method="post" action="<?= BASE_URL ?>register">
 
                                 <div class="mb-4">
                                     <div data-mdb-input-init class="form-outline flex-fill mb-0">

@@ -10,7 +10,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Event Management</a>
+        <a class="navbar-brand" href="<?= BASE_URL ?>">Event Management</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -21,17 +21,17 @@
                     if( !isset($_SESSION['user']) ){
                 ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>login">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/register">Register</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>register">Register</a>
                     </li>
                 <?php }else { ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="/events">Event</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>events">Event</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">Logout</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>logout">Logout</a>
                     </li>
                 <?php } ?>
             </ul>
