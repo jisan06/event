@@ -1,6 +1,6 @@
 <?php include __DIR__ . '/../include/header.php'; ?>
 
-<div class="container mt-5">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -54,7 +54,13 @@
                                 <td><?php echo htmlspecialchars($event['name'] ?? ''); ?></td>
                                 <td><?php echo htmlspecialchars($event['location'] ?? ''); ?></td>
                                 <td>
-                                    <?php echo !empty($event['date']) ? date('d-m-Y h:i a', strtotime($event['date'])) : 'N/A'; ?>
+                                    <?php
+                                    echo empty($event['date'])
+                                        ? 'Upcoming'
+                                        : (strtotime($event['date']) < time()
+                                            ? 'Expired'
+                                            : date('d-m-Y h:i a', strtotime($event['date'])));
+                                    ?>
                                 </td>
                                 <td class="text-center">
                                     <?php
@@ -67,20 +73,20 @@
                                 <td class="text-center">
                                     <?php if($event['total_seat'] > $event['registered']) { ?>
                                     <a href="<?= BASE_URL ?>events/register/<?php echo $event['id']; ?>"
-                                       class="btn btn-outline-danger btn-sm px-2 py-2"
+                                       class="btn btn-outline-danger btn-sm px-2 py-2 mb-1"
                                     >
                                         Registration
                                     </a>
                                     <?php } ?>
                                     <a href="<?= BASE_URL ?>events/<?php echo $event['id']; ?>"
-                                       class="btn btn-warning btn-sm px-2 py-2"
+                                       class="btn btn-warning btn-sm px-2 py-2 mb-1"
                                     >
                                         Edit
                                     </a>
                                     <form
                                         action="<?= BASE_URL ?>events/<?php echo $event['id']; ?>"
                                         method="POST"
-                                        style="display:inline;"
+                                        class="d-inline-block mb-1"
                                     >
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button
@@ -128,4 +134,5 @@
         </div>
     </div>
 </div>
+<?php include __DIR__ . '/../include/footer.php'; ?>
 

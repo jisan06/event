@@ -1,6 +1,6 @@
 <?php include __DIR__ . '/../include/header.php'; ?>
 
-<div class="container mt-5">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <h2 class="text-center mb-4">Create Event</h2>
@@ -45,6 +45,17 @@
                             >
                         </div>
                         <div class="mb-3">
+                            <label for="totalSeat" class="form-label">Total Seat</label>
+                            <input
+                                    type="number"
+                                    class="form-control"
+                                    id="totalSeat"
+                                    name="total_seat"
+                                    placeholder="Enter event total seat"
+                                    required
+                            >
+                        </div>
+                        <div class="mb-3">
                             <label for="eventDate" class="form-label">Event Date</label>
                             <input
                                 type="datetime-local"
@@ -63,7 +74,7 @@
                                 class="form-control"
                                 id="eventDescription"
                                 name="description"
-                                rows="8"
+                                rows="12
                                 placeholder="Enter event description"
                             ></textarea>
                         </div>
@@ -78,6 +89,6 @@
         </div>
     </div>
 </div>
-
+<?php include __DIR__ . '/../include/footer.php'; ?>
 
 

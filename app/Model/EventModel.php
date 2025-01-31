@@ -16,9 +16,9 @@ class EventModel
     public function create($data): bool
     {
         $date = empty($data['date']) ? null : $data['date'];
-        $query = "INSERT INTO events (name, date, location, description) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO events (name, date, location, description, total_seat) VALUES (?, ?, ?, ?, ?)";
         $db = $this->db->prepare($query);
-        $db->bind_param('ssss', $data['name'], $date, $data['location'], $data['description']);
+        $db->bind_param('ssssi', $data['name'], $date, $data['location'], $data['description'], $data['total_seat']);
 
         return $db->execute();
     }
@@ -141,18 +141,18 @@ class EventModel
     }
 
     // Check if event name is exist or not
-    public function uniqueName($name, $id = null): bool
+    public function uniqueName($name, $location, $id = null): bool
     {
-        $query = "SELECT id FROM events WHERE name = ?";
+        $query = "SELECT id FROM events WHERE name = ? AND location = ?";
         if ($id) {
             $query .= " AND id != ?";
         }
 
         $db = $this->db->prepare($query);
         if ($id) {
-            $db->bind_param('si', $name, $id);
+            $db->bind_param('ssi', $name, $location, $id);
         } else {
-            $db->bind_param('s', $name);
+            $db->bind_param('ss', $name, $location);
         }
 
         $db->execute();

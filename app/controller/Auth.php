@@ -15,7 +15,6 @@ class Auth
 
     public function register()
     {
-        session_start();
         // Check if the form is submitted via POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
@@ -74,7 +73,6 @@ class Auth
 
     public function login()
     {
-        session_start();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors = [];
 
@@ -113,12 +111,11 @@ class Auth
 
     public function logout()
     {
-        session_start();
         session_unset();
         session_destroy();
 
         // Redirect to the login page
-        header("Location: " . BASE_URL . "login");
+        header("Location: " . BASE_URL);
         exit;
     }
 }

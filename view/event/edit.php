@@ -1,6 +1,6 @@
 <?php include __DIR__ . '/../include/header.php'; ?>
 
-<div class="container mt-5">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <h2 class="text-center mb-4">Edit Event</h2>
@@ -94,6 +94,6 @@
         </div>
     </div>
 </div>
-
+<?php include __DIR__ . '/../include/footer.php'; ?>
 
 

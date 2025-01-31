@@ -14,4 +14,9 @@ class Helper
             die("View not found: {$viewPath}");
         }
     }
+
+    public static function is_logged_in()
+    {
+        return isset($_SESSION['user']);
+    }
 }

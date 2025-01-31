@@ -4,6 +4,9 @@ require_once __DIR__ . '/autoload.php';
 use App\Controller\Auth;
 use App\Controller\Event;
 
+session_start();
+$is_logged_in = App\Helper::is_logged_in();
+
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
 $base_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
 define('BASE_URL', str_replace('\/', '/', $base_url));
@@ -24,12 +27,11 @@ if (strpos($requestUri, $baseDir) === 0) {
 $routeSegments = explode('/', $requestUri); // Split the path into segments
 $request = implode('/', $routeSegments); // Rebuild the request URI
 
-// Debug: Output the route segments and request URI
-// print_r($routeSegments);
-// echo $request;
-
 // Route Handling
 if ($routeSegments[0] === 'events') {
+    if(!$is_logged_in) {
+        header("Location: " . BASE_URL);
+    }
     $event = new Event();
 
     switch (true) {
@@ -96,33 +98,47 @@ if ($routeSegments[0] === 'events') {
     }
 } else {
     switch ($routeSegments[0]) {
+        case '':
+            require_once App\Helper::view('index.php');
+            break;
         case 'register':
-            $auth = new Auth();
-            if ($method === 'POST') {
-                $auth->register();
-            } else {
-                require __DIR__ . '/view/auth/register.php';
+            if($is_logged_in) {
+                header("Location: " . BASE_URL);
+            }else {
+                $auth = new Auth();
+                if ($method === 'POST') {
+                    $auth->register();
+                } else {
+                    require __DIR__ . '/view/auth/register.php';
+                }
             }
             break;
 
         case 'login':
-        case '':
-            $auth = new Auth();
-            if ($method === 'POST') {
-                $auth->login();
-            } else {
-                require \App\Helper::view('auth/login.php');
+            if($is_logged_in) {
+                header("Location: " . BASE_URL);
+            }else {
+                $auth = new Auth();
+                if ($method === 'POST') {
+                    $auth->login();
+                } else {
+                    require \App\Helper::view('auth/login.php');
+                }
             }
             break;
 
         case 'logout':
-            $auth = new Auth();
-            $auth->logout();
+            if(!$is_logged_in) {
+                header("Location: " . BASE_URL);
+            }else {
+                $auth = new Auth();
+                $auth->logout();
+            }
             break;
 
         default:
             http_response_code(404);
-            echo "Route not found.";
+            require \App\Helper::view('404.php');
             break;
     }
 }

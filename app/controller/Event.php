@@ -19,10 +19,10 @@ class Event
 
     public function index()
     {
-        $limit = 10;
+        $limit = 5;
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-        $order = $_GET['order'] ?? 'ASC';
-        $order_by = $_GET['order_by'] ?? 'name';
+        $order = $_GET['order'] ?? 'DESC';
+        $order_by = $_GET['order_by'] ?? 'id';
         $offset = ($page - 1) * $limit;
 
         $filters = [
@@ -46,20 +46,24 @@ class Event
     }
     public function store()
     {
-        session_start();
         $errors = [];
 
         try {
+            $_POST['name'] = trim($_POST['name']);
+            $_POST['location'] = trim($_POST['location']);
             // Validation
             if (empty($_POST['name'])) {
                 $errors[] = 'Event name is required.';
             } else {
-                if ($this->eventDB->uniqueName($_POST['name'])) {
+                if ($this->eventDB->uniqueName($_POST['name'], $_POST['location'])) {
                     $errors[] = 'Event name already exists.';
                 }
             }
             if (empty($_POST['location'])) {
                 $errors[] = 'Location is required.';
+            }
+            if (empty($_POST['total_seat'])) {
+                $errors[] = 'Please write total available seat';
             }
 
             // If there are validation errors
@@ -103,17 +107,17 @@ class Event
 
     public function update($id)
     {
-        session_start();
-
         $errors = [];
 
         try {
+            $_POST['name'] = trim($_POST['name']);
+            $_POST['location'] = trim($_POST['location']);
             // Validation
             if (empty($_POST['name'])) {
                 $errors[] = 'Event name is required.';
             } else {
                 // Check if the event name is unique (exclude the current event)
-                if ($this->eventDB->uniqueName($_POST['name'], $id)) {
+                if ($this->eventDB->uniqueName($_POST['name'], $_POST['location'], $id)) {
                     $errors[] = 'Event name already exists.';
                 }
             }
@@ -154,7 +158,6 @@ class Event
     public function delete($id)
     {
         $delete = $this->eventDB->delete($id);
-        session_start();
         if ($delete) {
             $_SESSION['success'] = 'Event deleted successfully.';
         } else {
@@ -173,7 +176,6 @@ class Event
 
     public function register_event($event_id)
     {
-        session_start();
         $errors = [];
 
         try {

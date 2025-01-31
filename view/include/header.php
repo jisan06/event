@@ -9,15 +9,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="d-flex flex-column min-vh-100 wrapper">
+    <nav class="bg-light navbar navbar-expand-lg navbar-light px-5">
         <a class="navbar-brand" href="<?= BASE_URL ?>">Event Management</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <?php
-                    session_start();
                     if( !isset($_SESSION['user']) ){
                 ?>
                     <li class="nav-item">
@@ -37,3 +39,4 @@
             </ul>
         </div>
     </nav>
+    <div class="main-content pb-5 mt-5">
