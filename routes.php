@@ -7,9 +7,13 @@ use App\Controller\Event;
 session_start();
 $is_logged_in = App\Helper::is_logged_in();
 
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-$base_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/';
-define('BASE_URL', str_replace('\/', '/', $base_url));
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'];
+$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+$scriptDir = rtrim($scriptDir, '/');
+$base_url = $protocol . '://' . $host . $scriptDir . '/';
+
+define('BASE_URL', $base_url);
 
 $method = $_SERVER['REQUEST_METHOD'];
 // Extract only the path from the full request URI
