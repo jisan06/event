@@ -19,7 +19,7 @@ class Event
 
     public function index()
     {
-        $limit = isset($_GET['limit']) ? : 5;
+        $limit = isset($_GET['limit']) ? $_GET['limit'] : 5;
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         $order = $_GET['order'] ?? 'DESC';
         $order_by = $_GET['order_by'] ?? 'id';
