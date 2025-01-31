@@ -19,7 +19,7 @@ class Event
 
     public function index()
     {
-        $limit = 5;
+        $limit = isset($_GET['limit']) ? : 5;
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         $order = $_GET['order'] ?? 'DESC';
         $order_by = $_GET['order_by'] ?? 'id';
@@ -92,15 +92,8 @@ class Event
     }
 
 
-    public function edit()
+    public function edit($id)
     {
-        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-            http_response_code(400); // Bad Request
-            echo "Invalid Event ID.";
-            return;
-        }
-        $id = $_GET['id'];
-
         $event = $this->eventDB->find($id);
         include Helper::view('event/edit.php');
     }

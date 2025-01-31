@@ -55,9 +55,7 @@ if ($routeSegments[0] === 'events') {
             break;
 
         case isset($routeSegments[1]) && is_numeric($routeSegments[1]) && $method === 'GET':
-            // Show specific event for editing
-            $_GET['id'] = $routeSegments[1];
-            $event->edit();
+            $event->edit($routeSegments[1]);
             break;
 
         case isset($routeSegments[1]) &&
